@@ -49,6 +49,11 @@ def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
         if token.string.lower()[1:].lstrip().startswith(SKIP_PREFIXES):
             return
 
+    # skip long single-line strings
+    if token.type == tokenize.STRING and '\n' not in token.string:
+        return
+
+    # analyze every line of comments and multiline strings
     lines = token.string.splitlines()
     for offset, line in enumerate(lines):
         yield LineInfo(
