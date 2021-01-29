@@ -75,7 +75,7 @@ class Categorizer:
         return bool(match)
 
 
-class LengthChecker:
+class Checker:
     name = 'flake8-length'
     version = '0.0.1'
 
