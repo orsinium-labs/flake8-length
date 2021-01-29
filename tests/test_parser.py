@@ -26,6 +26,7 @@ def test_get_lines_info(given: str, expected: int):
 
 
 @pytest.mark.parametrize('given', [
+    ('#!/usr/bin/env python3'),
     ('# noqa: D12'),
     ('# pragma: no cover'),
     ('# E: Incompatible types in assignment'),

@@ -3,7 +3,7 @@ import tokenize
 from typing import Iterator, NamedTuple
 
 
-REX_NOQA = re.compile(r'#\s*(noqa|[nwer]:|pragma:).+')
+SKIP_PREFIXES = ('noqa', 'n:', 'w:', 'e:', 'r:', 'pragma:')
 TRUNCATE_TO = 10
 EXCLUDED = frozenset({
     tokenize.NEWLINE,
@@ -43,11 +43,10 @@ def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
 
     if token.type == tokenize.COMMENT:
         # skip shebang
-        if token.string.startswith('!#'):
+        if token.string.startswith('#!'):
             return
         # skip noqa, pragma, and other special tokens
-        match = REX_NOQA.fullmatch(token.string.lower())
-        if match:
+        if token.string.lower()[1:].lstrip().startswith(SKIP_PREFIXES):
             return
 
     lines = token.string.splitlines()
