@@ -23,6 +23,7 @@ def to_tokens(lines: list):
 
     # strings
     ('"SELECT * FROM table"', [21]),
+    ('"SELECT * FROM table_with_very_long_name"', [TRUNCATE_TO + 15]),
 
     # multiline strings
     (
