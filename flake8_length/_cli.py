@@ -6,12 +6,13 @@ from typing import Sequence, TextIO
 
 from ._checker import Checker
 
-TEMPLATE = "{path}:{row}"
+TEMPLATE = "{path}:{vl.row}: {vl.length} > {vl.limit}"
 
 
 def main(argv: Sequence[str], stream: TextIO = sys.stdout) -> int:
     parser = ArgumentParser()
-    parser.add_argument('--max', type=int)
+    parser.add_argument('--max', type=int, default=90)
+    parser.add_argument('--show', action='store_true')
     parser.add_argument('paths', nargs='+', type=Path)
     args = parser.parse_args(argv)
 
@@ -20,13 +21,13 @@ def main(argv: Sequence[str], stream: TextIO = sys.stdout) -> int:
         with path.open('rb') as file_stream:
             tokens = list(tokenize.tokenize(file_stream.__next__))
             checker = Checker(None, tokens)
-            for violation in checker.run():
+            checker._limit = args.max
+            for vl in checker.get_violations():
                 violations += 1
-                msg = TEMPLATE.format(
-                    path=path,
-                    row=violation[0],
-                )
+                msg = TEMPLATE.format(path=path, vl=vl)
                 print(msg, file=stream)
+                if args.show:
+                    print(' ', vl.line.strip(), file=stream)
     return violations
 
 
