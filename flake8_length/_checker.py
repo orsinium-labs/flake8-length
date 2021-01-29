@@ -6,14 +6,6 @@ from ._parser import get_lines_info
 
 Violation = Tuple[int, int, str, type]
 Tokens = Sequence[tokenize.TokenInfo]
-EXCLUDED = frozenset({
-    tokenize.NEWLINE,
-    tokenize.ENCODING,
-    tokenize.ENDMARKER,
-    tokenize.ERRORTOKEN,
-    tokenize.COMMA,
-    tokenize.COLON,
-})
 
 
 class Checker:
@@ -34,8 +26,6 @@ class Checker:
 
     def run(self) -> Iterator[Violation]:
         for token in self._tokens:
-            if token.type in EXCLUDED:
-                continue
             for line_info in get_lines_info(token=token):
                 if line_info.length <= self._limit:
                     continue

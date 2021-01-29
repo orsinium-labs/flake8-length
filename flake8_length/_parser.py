@@ -5,6 +5,14 @@ from typing import Iterator, NamedTuple
 
 REX_NOQA = re.compile(r'#\s*(noqa|[nwer]:|pragma:).+')
 TRUNCATE_TO = 10
+EXCLUDED = frozenset({
+    tokenize.NEWLINE,
+    tokenize.ENCODING,
+    tokenize.ENDMARKER,
+    tokenize.ERRORTOKEN,
+    tokenize.COMMA,
+    tokenize.COLON,
+})
 
 
 class LineInfo(NamedTuple):
@@ -23,6 +31,9 @@ def get_line_length(line: str) -> int:
 
 
 def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
+    if token.type in EXCLUDED:
+        return
+
     if token.type not in {tokenize.COMMENT, tokenize.STRING}:
         if token.end[1] > token.start[1]:
             yield LineInfo(row=token.end[0], length=token.end[1])
