@@ -23,3 +23,14 @@ def test_get_lines_info(given: str, expected: int):
     infos = list(get_lines_info(tokens[1]))
     assert len(infos) == 1
     assert infos[0].length == expected
+
+
+@pytest.mark.parametrize('given', [
+    ('# noqa: D12'),
+    ('# pragma: no cover'),
+    ('# E: Incompatible types in assignment'),
+])
+def test_skip(given: str):
+    tokens = to_tokens([given])
+    infos = list(get_lines_info(tokens[1]))
+    assert len(infos) == 0

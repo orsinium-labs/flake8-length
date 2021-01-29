@@ -3,7 +3,7 @@ import tokenize
 from typing import Iterator, NamedTuple
 
 
-REX_NOQA = re.compile(r'(noqa|[nwer]:|pragma:).+')
+REX_NOQA = re.compile(r'#\s*(noqa|[nwer]:|pragma:).+')
 TRUNCATE_TO = 10
 
 
@@ -35,7 +35,7 @@ def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
         if token.string.startswith('!#'):
             return
         # skip noqa, pragma, and other special tokens
-        match = REX_NOQA.fullmatch(token.string)
+        match = REX_NOQA.fullmatch(token.string.lower())
         if match:
             return
 
