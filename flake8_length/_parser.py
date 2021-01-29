@@ -1,4 +1,3 @@
-import re
 import tokenize
 from typing import Iterator, NamedTuple
 
@@ -7,6 +6,7 @@ SKIP_PREFIXES = ('noqa', 'n:', 'w:', 'e:', 'r:', 'pragma:')
 TRUNCATE_TO = 10
 EXCLUDED = frozenset({
     tokenize.NEWLINE,
+    tokenize.NL,
     tokenize.ENCODING,
     tokenize.ENDMARKER,
     tokenize.ERRORTOKEN,

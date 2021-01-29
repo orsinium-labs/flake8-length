@@ -33,7 +33,10 @@ def to_tokens(lines: list):
 ])
 def test_get_lines_info(given: str, expected: int):
     tokens = to_tokens([given])
-    infos = list(get_lines_info(tokens[1]))
+    print(*tokens, sep='\n')
+    infos: list = []
+    for token in tokens:
+        infos.extend(get_lines_info(token))
     assert [info.length for info in infos] == expected
 
 
