@@ -19,6 +19,7 @@ EXCLUDED = frozenset({
 class LineInfo(NamedTuple):
     row: int
     length: int
+    line: str
 
 
 def get_line_length(line: str) -> int:
@@ -37,9 +38,9 @@ def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
 
     if token.type not in {tokenize.COMMENT, tokenize.STRING}:
         if token.end[1] > token.start[1]:
-            yield LineInfo(row=token.end[0], length=token.end[1])
+            yield LineInfo(row=token.end[0], length=token.end[1], line=token.line)
         else:
-            yield LineInfo(row=token.start[0], length=token.start[1])
+            yield LineInfo(row=token.start[0], length=token.start[1], line=token.line)
         return
 
     if token.type == tokenize.COMMENT:
@@ -57,6 +58,7 @@ def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
             yield LineInfo(
                 row=token.start[0],
                 length=token.start[1] + get_line_length(token.string),
+                line=token.line,
             )
         return
 
@@ -66,4 +68,5 @@ def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
         yield LineInfo(
             row=token.start[0] + offset,
             length=token.start[1] + get_line_length(line),
+            line=line,
         )

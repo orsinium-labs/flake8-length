@@ -43,5 +43,5 @@ class Checker:
                     row=line_info.row,
                     length=line_info.length,
                     limit=self._limit,
-                    line=token.line,
+                    line=line_info.line,
                 )
