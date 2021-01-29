@@ -3,6 +3,7 @@ from typing import Iterator, NamedTuple
 
 
 SKIP_PREFIXES = ('noqa', 'n:', 'w:', 'e:', 'r:', 'pragma:')
+SQL_PREFIXES = ('SELECT ', 'UPDATE', 'DELETE ')
 TRUNCATE_TO = 10
 EXCLUDED = frozenset({
     tokenize.NEWLINE,
@@ -49,8 +50,14 @@ def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
         if token.string.lower()[1:].lstrip().startswith(SKIP_PREFIXES):
             return
 
-    # skip long single-line strings
+    # skip single-line strings
     if token.type == tokenize.STRING and '\n' not in token.string:
+        # do not skip SQL queries
+        if token.string.lstrip('brfu').lstrip('"\'').startswith(SQL_PREFIXES):
+            yield LineInfo(
+                row=token.start[0],
+                length=token.start[0] + get_line_length(token.string) - 1,
+            )
         return
 
     # analyze every line of comments and multiline strings

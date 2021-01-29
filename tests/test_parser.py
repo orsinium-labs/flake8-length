@@ -21,6 +21,9 @@ def to_tokens(lines: list):
     ('# https://github.com/life4/deal', [TRUNCATE_TO + 2]),
     ('# see also: https://github.com/life4/deal', [TRUNCATE_TO + 12]),
 
+    # strings
+    ('"SELECT * FROM table"', [21]),
+
     # multiline strings
     (
         "'''\n  hello world\n'''",
