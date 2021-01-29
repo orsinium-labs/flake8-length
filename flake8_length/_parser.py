@@ -56,7 +56,7 @@ def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
         if token.string.lstrip('brfu').lstrip('"\'').startswith(SQL_PREFIXES):
             yield LineInfo(
                 row=token.start[0],
-                length=token.start[0] + get_line_length(token.string) - 1,
+                length=token.start[1] + get_line_length(token.string),
             )
         return
 
@@ -65,5 +65,5 @@ def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
     for offset, line in enumerate(lines):
         yield LineInfo(
             row=token.start[0] + offset,
-            length=token.start[0] + get_line_length(line) - 1,
+            length=token.start[1] + get_line_length(line),
         )
