@@ -1,5 +1,7 @@
 import tokenize
+
 import pytest
+
 from flake8_length._parser import get_lines_info, TRUNCATE_TO
 
 
@@ -10,20 +12,29 @@ def to_tokens(lines: list):
 
 @pytest.mark.parametrize('given, expected', [
     # regular code
-    ('123', 3),
-    ('12367', 5),
+    ('123', [3]),
+    ('12367', [5]),
 
     # comments
-    ('# hello', 7),
-    ('# hello world', 13),
-    ('# https://github.com/life4/deal', TRUNCATE_TO + 2),
-    ('# see also: https://github.com/life4/deal', TRUNCATE_TO + 12),
+    ('# hello', [7]),
+    ('# hello world', [13]),
+    ('# https://github.com/life4/deal', [TRUNCATE_TO + 2]),
+    ('# see also: https://github.com/life4/deal', [TRUNCATE_TO + 12]),
+
+    # multiline strings
+    (
+        "'''\n  hello world\n'''",
+        [3, 13, 3],
+    ),
+    (
+        "'''\n  https://github.com/life4/deal\n'''",
+        [3, TRUNCATE_TO + 2, 3],
+    ),
 ])
 def test_get_lines_info(given: str, expected: int):
     tokens = to_tokens([given])
     infos = list(get_lines_info(tokens[1]))
-    assert len(infos) == 1
-    assert infos[0].length == expected
+    assert [info.length for info in infos] == expected
 
 
 @pytest.mark.parametrize('given', [
