@@ -5,6 +5,7 @@ from typing import Iterator, Sequence, Tuple, NamedTuple
 from ._parser import get_lines_info
 
 Tokens = Sequence[tokenize.TokenInfo]
+TEMPLATE = 'LN001 line is too long ({v.length} > {v.limit})'
 
 
 class Violation(NamedTuple):
@@ -14,7 +15,8 @@ class Violation(NamedTuple):
     line: str
 
     def as_tuple(self) -> Tuple[int, int, str, type]:
-        return self.row, self.limit, 'line is too long', type(self)
+        msg = TEMPLATE.format(v=self)
+        return self.row, self.limit, msg, type(self)
 
 
 class Checker:
