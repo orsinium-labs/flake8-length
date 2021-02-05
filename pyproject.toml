@@ -1,0 +1,51 @@
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.isort]
+line_length = 90
+combine_as_imports = true
+balanced_wrapping = true
+lines_after_imports = 2
+skip = "venvs/"
+not_skip = "__init__.py"
+multi_line_output = 5
+include_trailing_comma = true
+
+import_heading_stdlib = "built-in"
+import_heading_thirdparty = "external"
+import_heading_firstparty = "project"
+import_heading_localfolder = "app"
+
+
+[tool.flit.metadata]
+module = "flake8_length"
+dist-name = "flake8-length"
+license = "MIT"
+author = "Gram"
+author-email = "gram@orsinium.dev"
+home-page = "https://github.com/orsinium-labs/flake8-length"
+description-file = "README.md"
+requires-python = ">=3.6"
+keywords = "flake8,plugins,introspection,linter"
+requires = ["flake8"]
+
+classifiers=[
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Plugins",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Quality Assurance",
+]
+
+[tool.flit.metadata.requires-extra]
+dev = [
+    "isort",
+    "mypy",
+    "pytest",
+]
+
+[tool.flit.entrypoints."flake8.extension"]
+LN001 = "flake8_length:Checker"

@@ -1,2 +1,5 @@
 __pycache__
 /.*_cache/
+/.task/
+/venvs/
+/dist/
