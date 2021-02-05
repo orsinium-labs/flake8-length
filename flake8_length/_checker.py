@@ -1,8 +1,10 @@
 # built-in
 import tokenize
-from typing import Iterator, Sequence, Tuple, NamedTuple
+from typing import Iterator, NamedTuple, Sequence, Tuple
 
+# app
 from ._parser import get_lines_info
+
 
 Tokens = Sequence[tokenize.TokenInfo]
 TEMPLATE = 'LN001 line is too long ({v.length} > {v.limit})'

@@ -1,10 +1,13 @@
+# built-in
 import sys
 import tokenize
 from argparse import ArgumentParser
 from pathlib import Path
 from typing import Sequence, TextIO
 
+# app
 from ._checker import Checker
+
 
 TEMPLATE = "{path}:{vl.row}: {vl.length} > {vl.limit}"
 

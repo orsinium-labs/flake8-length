@@ -1,6 +1,7 @@
 """Flake8 plugin for a smart line length validation.
 """
 
+# app
 from ._checker import Checker
 
 

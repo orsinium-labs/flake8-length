@@ -1,8 +1,11 @@
+# built-in
 import tokenize
 
+# external
 import pytest
 
-from flake8_length._parser import get_lines_info, TRUNCATE_TO
+# project
+from flake8_length._parser import TRUNCATE_TO, get_lines_info
 
 
 def to_tokens(lines: list):
