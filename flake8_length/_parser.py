@@ -12,6 +12,7 @@ EXCLUDED = frozenset({
     tokenize.ENDMARKER,
     tokenize.ERRORTOKEN,
     tokenize.COMMA,
+    tokenize.RBRACE,
     tokenize.COLON,
 })
 
