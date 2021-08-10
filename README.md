@@ -68,7 +68,7 @@ Configuration example (`setup.cfg`):
 
 ```ini
 [flake8]
-ignore =
+extend-ignore =
     E501,
     W505
 max-line-length = 90
