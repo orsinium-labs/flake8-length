@@ -67,8 +67,12 @@ def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
     # analyze every line of comments and multiline strings
     lines = token.string.splitlines()
     for offset, line in enumerate(lines):
+        line_length = get_line_length(line)
+        if offset == 0:
+            line_length += token.start[1]
         yield LineInfo(
             row=token.start[0] + offset,
-            length=token.start[1] + get_line_length(line),
+            length=line_length,
             line=line,
         )
+
