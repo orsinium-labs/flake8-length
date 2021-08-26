@@ -3,12 +3,13 @@ import tokenize
 
 # external
 import pytest
+from typing import Union
 
 # project
 from flake8_length._parser import TRUNCATE_TO, get_lines_info
 
 
-def to_tokens(lines: list):
+def to_tokens(lines: list[str]):
     readline = (line.encode() for line in lines).__next__
     return list(tokenize.tokenize(readline))
 
@@ -37,9 +38,19 @@ def to_tokens(lines: list):
         "'''\n  https://github.com/life4/deal\n'''",
         [3, TRUNCATE_TO + 2, 3],
     ),
+    (
+        ("print('''\n", ' 1' * 39 + '\n', "''')\n"),
+        # 5, 6, 9 = three tokens in print('''
+        # 78 = length of ' 1'*39
+        # 3, 4 = two tokens in ''')
+        [5, 6, 9, 78, 3, 4]
+    ),
 ])
-def test_get_lines_info(given: str, expected: int):
-    tokens = to_tokens([given])
+def test_get_lines_info(given: Union[str, list[str]], expected: int):
+    if isinstance(given, str):
+        given = [given]
+
+    tokens = to_tokens(given)
     print(*tokens, sep='\n')
     infos: list = []
     for token in tokens:

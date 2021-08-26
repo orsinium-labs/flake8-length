@@ -75,4 +75,3 @@ def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
             length=line_length,
             line=line,
         )
-
