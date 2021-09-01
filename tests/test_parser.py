@@ -3,13 +3,12 @@ import tokenize
 
 # external
 import pytest
-from typing import Union
-
+from typing import Union, List
 # project
 from flake8_length._parser import TRUNCATE_TO, get_lines_info
 
 
-def to_tokens(lines: list[str]):
+def to_tokens(lines: List[str]):
     readline = (line.encode() for line in lines).__next__
     return list(tokenize.tokenize(readline))
 
@@ -46,7 +45,7 @@ def to_tokens(lines: list[str]):
         [5, 6, 9, 78, 3, 4]
     ),
 ])
-def test_get_lines_info(given: Union[str, list[str]], expected: int):
+def test_get_lines_info(given: Union[str, List[str]], expected: int):
     if isinstance(given, str):
         given = [given]
 

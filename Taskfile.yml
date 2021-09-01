@@ -73,7 +73,7 @@ tasks:
           ENV: "{{.PYTEST_ENV}}"
           EXTRA: dev
     cmds:
-      - "{{.PYTEST_ENV}}/bin/pytest tests/"
+      - "{{.PYTEST_ENV}}/bin/pytest {{.CLI_ARGS}}"
 
   mypy:run:
     deps:
