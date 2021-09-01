@@ -6,15 +6,22 @@ from typing import Iterator, NamedTuple
 SKIP_PREFIXES = ('noqa', 'n:', 'w:', 'e:', 'r:', 'pragma:')
 SQL_PREFIXES = ('SELECT ', 'UPDATE', 'DELETE ')
 TRUNCATE_TO = 10
-EXCLUDED = frozenset({
+EXCLUDED_TOKENS = frozenset({
     tokenize.NEWLINE,
     tokenize.NL,
     tokenize.ENCODING,
     tokenize.ENDMARKER,
     tokenize.ERRORTOKEN,
     tokenize.COMMA,
+    tokenize.LBRACE,
     tokenize.RBRACE,
     tokenize.COLON,
+})
+EXCLUDED_PAIRS = frozenset({
+    (tokenize.OP, '('),
+    (tokenize.OP, ')'),
+    (tokenize.OP, ','),
+    (tokenize.OP, ';'),
 })
 
 
@@ -35,7 +42,9 @@ def get_line_length(line: str) -> int:
 
 
 def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
-    if token.type in EXCLUDED:
+    if token.type in EXCLUDED_TOKENS:
+        return
+    if (token.type, token.string) in EXCLUDED_PAIRS:
         return
 
     if token.type not in {tokenize.COMMENT, tokenize.STRING}:

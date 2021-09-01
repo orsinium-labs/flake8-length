@@ -1,15 +1,16 @@
 # built-in
+import re
 import tokenize
+from pathlib import Path
 
 # external
 import pytest
-from typing import Union
-
+from typing import Union, List
 # project
 from flake8_length._parser import TRUNCATE_TO, get_lines_info
 
 
-def to_tokens(lines: list[str]):
+def to_tokens(lines: List[str]):
     readline = (line.encode() for line in lines).__next__
     return list(tokenize.tokenize(readline))
 
@@ -43,10 +44,10 @@ def to_tokens(lines: list[str]):
         # 5, 6, 9 = three tokens in print('''
         # 78 = length of ' 1'*39
         # 3, 4 = two tokens in ''')
-        [5, 6, 9, 78, 3, 4]
+        [5, 9, 78, 3]
     ),
 ])
-def test_get_lines_info(given: Union[str, list[str]], expected: int):
+def test_get_lines_info(given: Union[str, List[str]], expected: int):
     if isinstance(given, str):
         given = [given]
 
@@ -69,3 +70,28 @@ def test_skip(given: str):
     tokens = to_tokens([given])
     infos = list(get_lines_info(tokens[1]))
     assert len(infos) == 0
+
+
+def test_fixture():
+    path = Path(__file__).parent / 'fixture.py'
+    lines = path.read_text().splitlines()
+
+    rex = re.compile(r'  # L(\d+)')
+    cleaned = []
+    expected = {}
+    for i, line in enumerate(lines, start=1):
+        match = rex.search(line)
+        if match:
+            line = line.replace(match.group(0), ' ')
+            expected[i] = int(match.group(1))
+        cleaned.append(line.rstrip(' ') + '\n')
+    assert len(expected) > 5
+
+    actual = {}
+    for token in to_tokens(cleaned):
+        for info in get_lines_info(token):
+            actual[info.row] = max(
+                info.length,
+                actual.get(info.row, 0),
+            )
+    assert actual == expected
