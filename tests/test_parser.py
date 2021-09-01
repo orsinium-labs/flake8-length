@@ -44,7 +44,7 @@ def to_tokens(lines: List[str]):
         # 5, 6, 9 = three tokens in print('''
         # 78 = length of ' 1'*39
         # 3, 4 = two tokens in ''')
-        [5, 6, 9, 78, 3, 4]
+        [5, 9, 78, 3]
     ),
 ])
 def test_get_lines_info(given: Union[str, List[str]], expected: int):
