@@ -1,5 +1,7 @@
 # built-in
+import re
 import tokenize
+from pathlib import Path
 
 # external
 import pytest
@@ -68,3 +70,28 @@ def test_skip(given: str):
     tokens = to_tokens([given])
     infos = list(get_lines_info(tokens[1]))
     assert len(infos) == 0
+
+
+def test_fixture():
+    path = Path(__file__).parent / 'fixture.py'
+    lines = path.read_text().splitlines()
+
+    rex = re.compile(r'  # L(\d+)')
+    cleaned = []
+    expected = {}
+    for i, line in enumerate(lines, start=1):
+        match = rex.search(line)
+        if match:
+            line = line.replace(match.group(0), ' ')
+            expected[i] = int(match.group(1))
+        cleaned.append(line.rstrip(' ') + '\n')
+    assert len(expected) > 5
+
+    actual = {}
+    for token in to_tokens(cleaned):
+        for info in get_lines_info(token):
+            actual[info.row] = max(
+                info.length,
+                actual.get(info.row, 0),
+            )
+    assert actual == expected
