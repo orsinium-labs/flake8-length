@@ -20,8 +20,11 @@ EXCLUDED_TOKENS = frozenset({
 EXCLUDED_PAIRS = frozenset({
     (tokenize.OP, '('),
     (tokenize.OP, ')'),
+    (tokenize.OP, '['),
+    (tokenize.OP, ']'),
     (tokenize.OP, ','),
     (tokenize.OP, ';'),
+    (tokenize.OP, ':'),
 })
 
 

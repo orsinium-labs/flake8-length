@@ -30,6 +30,15 @@ def to_tokens(lines: List[str]):
     ('"SELECT * FROM table"', [21]),
     ('"SELECT * FROM table_with_very_long_name"', [TRUNCATE_TO + 15]),
 
+    # ignored endline markers
+    ('123', [3]),
+    ('123,', [3]),
+    ('[123]', [4]),
+    ('(123)', [4]),
+    ('(123,)', [4]),
+    ('(123,);', [4]),
+    ('if 0:0', [2, 4, 6]),
+
     # multiline strings
     (
         "'''\n  hello world\n'''",
