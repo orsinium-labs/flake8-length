@@ -1,7 +1,6 @@
 # built-in
 import tokenize
-from typing import Iterator, NamedTuple, Sequence, Tuple
-from typing_extensions import Literal
+from typing import Iterator, NamedTuple, Sequence, Tuple, Literal
 
 # app
 from ._parser import get_lines_info

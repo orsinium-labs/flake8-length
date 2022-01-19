@@ -1,7 +1,6 @@
 # built-in
 import tokenize
-from typing import Iterator, NamedTuple
-from typing_extensions import Literal
+from typing import Iterator, NamedTuple, Literal
 
 
 SKIP_PREFIXES = ('noqa', 'n:', 'w:', 'e:', 'r:', 'pragma:')
