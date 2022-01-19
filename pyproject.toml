@@ -49,3 +49,4 @@ dev = [
 
 [tool.flit.entrypoints."flake8.extension"]
 LN001 = "flake8_length:Checker"
+LN002 = "flake8_length:Checker"
