@@ -40,7 +40,11 @@ class Checker:
     @classmethod
     def parse_options(cls, options) -> None:
         cls._code_limit = options.max_line_length
-        cls._doc_limit = options.max_doc_length
+
+        if options.max_doc_length:
+            cls._doc_limit = options.max_doc_length
+        else:
+            cls._doc_limit = options.max_line_length
 
     def run(self) -> Iterator:
         for violation in self.get_violations():
