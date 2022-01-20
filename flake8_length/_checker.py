@@ -1,6 +1,6 @@
 # built-in
 import tokenize
-from typing import Iterator, NamedTuple, Sequence, Tuple, Literal
+from typing import Iterator, NamedTuple, Sequence, Tuple
 
 # app
 from ._parser import get_lines_info
@@ -16,7 +16,7 @@ TEMPLATE = '{v.code} {d} ({v.length} > {v.limit})'
 
 
 class Violation(NamedTuple):
-    code: Literal['LN001', 'LN002']
+    code: str
     row: int
     length: int
     limit: int

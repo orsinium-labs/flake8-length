@@ -1,6 +1,6 @@
 # built-in
 import tokenize
-from typing import Iterator, NamedTuple, Literal
+from typing import Iterator, NamedTuple
 
 
 SKIP_PREFIXES = ('noqa', 'n:', 'w:', 'e:', 'r:', 'pragma:')
@@ -31,7 +31,7 @@ EXCLUDED_PAIRS = frozenset({
 
 
 class LineInfo(NamedTuple):
-    type: Literal['code', 'doc']
+    type: str
     row: int
     length: int
     line: str
