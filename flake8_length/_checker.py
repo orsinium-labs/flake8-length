@@ -3,27 +3,26 @@ import tokenize
 from typing import Iterator, NamedTuple, Sequence, Tuple
 
 # app
-from ._parser import get_lines_info
+from ._parser import get_lines_info, Message
 
 
 Tokens = Sequence[tokenize.TokenInfo]
-VIOLATION_DESCRIPTION_MAP = {
-    'LN001': 'code line is too long',
-    'LN002': 'doc/comment line is too long'
-}
-
-TEMPLATE = '{v.code} {d} ({v.length} > {v.limit})'
+TEMPLATE = '{v.code} {v.message} ({v.length} > {v.limit})'
 
 
 class Violation(NamedTuple):
-    code: str
+    message: Message
     row: int
     length: int
     limit: int
     line: str
 
+    @property
+    def code(self) -> str:
+        return self.message.name
+
     def as_tuple(self) -> Tuple[int, int, str, type]:
-        msg = TEMPLATE.format(v=self, d=VIOLATION_DESCRIPTION_MAP.get(self.code))
+        msg = TEMPLATE.format(v=self)
         return self.row, self.limit, msg, type(self)
 
 
@@ -40,7 +39,6 @@ class Checker:
     @classmethod
     def parse_options(cls, options) -> None:
         cls._code_limit = options.max_line_length
-
         if options.max_doc_length:
             cls._doc_limit = options.max_doc_length
         else:
@@ -53,11 +51,14 @@ class Checker:
     def get_violations(self) -> Iterator[Violation]:
         for token in self._tokens:
             for line_info in get_lines_info(token=token):
-                limit = self._doc_limit if line_info.type == 'doc' else self._code_limit
+                if line_info.message == Message.LN002:
+                    limit = self._doc_limit
+                else:
+                    limit = self._code_limit
                 if line_info.length <= limit:
                     continue
                 yield Violation(
-                    code= 'LN002' if line_info.type == 'doc' else 'LN001',
+                    message=line_info.message,
                     row=line_info.row,
                     length=line_info.length,
                     limit=limit,

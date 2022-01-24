@@ -1,6 +1,12 @@
 # built-in
 import tokenize
+from enum import Enum
 from typing import Iterator, NamedTuple
+
+
+class Message(str, Enum):
+    LN001 = 'code line is too long'
+    LN002 = 'doc/comment line is too long'
 
 
 SKIP_PREFIXES = ('noqa', 'n:', 'w:', 'e:', 'r:', 'pragma:')
@@ -31,7 +37,7 @@ EXCLUDED_PAIRS = frozenset({
 
 
 class LineInfo(NamedTuple):
-    type: str
+    message: Message
     row: int
     length: int
     line: str
@@ -55,9 +61,19 @@ def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
 
     if token.type not in {tokenize.COMMENT, tokenize.STRING}:
         if token.end[1] > token.start[1]:
-            yield LineInfo(type='code', row=token.end[0], length=token.end[1], line=token.line)
+            yield LineInfo(
+                message=Message.LN001,
+                row=token.end[0],
+                length=token.end[1],
+                line=token.line,
+            )
         else:
-            yield LineInfo(type='code', row=token.start[0], length=token.start[1], line=token.line)
+            yield LineInfo(
+                message=Message.LN001,
+                row=token.start[0],
+                length=token.start[1],
+                line=token.line,
+            )
         return
 
     if token.type == tokenize.COMMENT:
@@ -73,7 +89,7 @@ def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
         # do not skip SQL queries
         if token.string.lstrip('brfu').lstrip('"\'').startswith(SQL_PREFIXES):
             yield LineInfo(
-                type='code',
+                message=Message.LN001,
                 row=token.start[0],
                 length=token.start[1] + get_line_length(token.string),
                 line=token.line,
@@ -87,7 +103,7 @@ def get_lines_info(token: tokenize.TokenInfo) -> Iterator[LineInfo]:
         if offset == 0:
             line_length += token.start[1]
         yield LineInfo(
-            type='doc',
+            message=Message.LN002,
             row=token.start[0] + offset,
             length=line_length,
             line=line,
