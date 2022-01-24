@@ -15,7 +15,8 @@ TEMPLATE = "{path}:{vl.row}: {vl.length} > {vl.limit}"
 def main(argv: Sequence[str], stream: TextIO = sys.stdout) -> int:
     parser = ArgumentParser()
     parser.add_argument('--max', type=int, default=90)
-    parser.add_argument('--maxdoc', type=int, default=None)
+    parser.add_argument('--max-code', type=int, default=None)
+    parser.add_argument('--max-doc', type=int, default=None)
     parser.add_argument('--show', action='store_true')
     parser.add_argument('paths', nargs='+', type=Path)
     args = parser.parse_args(argv)
@@ -25,8 +26,8 @@ def main(argv: Sequence[str], stream: TextIO = sys.stdout) -> int:
         with path.open('rb') as file_stream:
             tokens = list(tokenize.tokenize(file_stream.__next__))
             checker = Checker(None, tokens)
-            checker._code_limit = args.max
-            checker._doc_limit = args.maxdoc if args.maxdoc else args.max
+            checker._code_limit = args.max_code or args.max
+            checker._doc_limit = args.max_doc or args.max
             for vl in checker.get_violations():
                 violations += 1
                 msg = TEMPLATE.format(path=path, vl=vl)
