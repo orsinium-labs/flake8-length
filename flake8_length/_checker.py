@@ -7,7 +7,7 @@ from ._parser import get_lines_info, Message
 
 
 Tokens = Sequence[tokenize.TokenInfo]
-TEMPLATE = '{v.code} {v.message} ({v.length} > {v.limit})'
+TEMPLATE = '{v.code} {v.message.value} ({v.length} > {v.limit})'
 
 
 class Violation(NamedTuple):
