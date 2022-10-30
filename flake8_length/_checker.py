@@ -21,9 +21,9 @@ class Violation(NamedTuple):
     def code(self) -> str:
         return self.message.name
 
-    def as_tuple(self) -> Tuple[int, int, str, type]:
+    def as_tuple(self) -> Tuple[int, int, str]:
         msg = TEMPLATE.format(v=self)
-        return self.row, self.limit, msg, type(self)
+        return self.row, self.limit, msg
 
 
 class Checker:
@@ -44,9 +44,9 @@ class Checker:
         else:
             cls._doc_limit = options.max_line_length
 
-    def run(self) -> Iterator:
+    def run(self) -> Iterator[tuple]:
         for violation in self.get_violations():
-            yield violation.as_tuple()
+            yield violation.as_tuple() + (type(self),)
 
     def get_violations(self) -> Iterator[Violation]:
         for token in self._tokens:
